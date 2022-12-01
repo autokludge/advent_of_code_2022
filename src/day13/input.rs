@@ -1,6 +1,6 @@
 use crate::day13::Input;
 
-const INPUT: &str = include_str!("../../input/13/input.txt");
+const INPUT: &str = include_str!("../../input/13/input");
 
 pub fn read() -> Input {
     unimplemented!()

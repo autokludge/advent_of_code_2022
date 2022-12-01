@@ -1,17 +1,7 @@
-# Eric's Advent of Code 2022 Solutions
-
-## The Blog
-
-For the last two years, I've blogged my approaches to the Advent of Code puzzles on my
-[personal site](https://www.ericburden.work/blog/). Assuming I hold true to form, each 
-blog post will include code and commentary on my thinking behind the approach, my thoughts
-about the puzzles, and vain attempts at wit.
+# Jesse's Advent of Code 2022 Solutions
 
 ## Project Structure
-
-This year, I'm using Rust! I solved 2019's puzzles in Rust after the fact (it's how I
-learned Rust to begin with), but this year I'll solve each day in Rust first. I've 
-set up folders for each day's code and input files like so:
+I've set up folders for each day's code and input files like so:
 
 ```
 <project root>
@@ -19,7 +9,7 @@ set up folders for each day's code and input files like so:
 │ └─all_days.rs
 ├─input
 │ └─XX
-│   ├─input.txt
+│   ├─input
 │   └─test.txt
 ├─src
 │ ├─dayXX

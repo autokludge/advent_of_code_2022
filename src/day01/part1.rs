@@ -1,5 +1,5 @@
 use crate::day01::{Input, Output};
 
 pub fn solve(input: &Input) -> Output {
-    unimplemented!()
+    Output::U32(*input.into_iter().max().unwrap())
 }
