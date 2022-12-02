@@ -2,9 +2,12 @@ pub mod input;
 pub mod part1;
 pub mod part2;
 
+use std::collections::BinaryHeap;
+
 use crate::{Output, Part};
 
-pub type Input = Vec<u32>;
+// pub type Input = Vec<u32>;
+pub type Input = BinaryHeap<u32>;
 
 pub fn run(part: Part) -> Output {
     let input = input::read();
