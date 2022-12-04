@@ -13,3 +13,7 @@ pub fn read() -> Input {
     }
     strategy_input
 }
+
+pub fn readex() -> Input {
+    unimplemented!()
+}

@@ -10,9 +10,12 @@ use crate::{Output, Part};
 pub type Input = BinaryHeap<u32>;
 
 pub fn run(part: Part) -> Output {
+    let exampleinput = input::readex();
     let input = input::read();
     match part {
+        Part::OneEx => part1::solve(&exampleinput),
         Part::One => part1::solve(&input),
+        Part::TwoEx => part2::solve(&exampleinput),
         Part::Two => part2::solve(&input),
     }
 }

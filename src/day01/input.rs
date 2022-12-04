@@ -10,3 +10,7 @@ pub fn read() -> Input {
     }
     BinaryHeap::from_iter(INPUT.split("\n\n").map(|ls| parse_elf(ls)))
 }
+
+pub fn readex() -> Input {
+    unimplemented!()
+}

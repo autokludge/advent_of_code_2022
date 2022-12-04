@@ -30,6 +30,8 @@ pub mod day25;
 
 // Used as a flag to indicate which part of a day to run.
 pub enum Part {
+    OneEx,
+    TwoEx,
     One,
     Two,
 }
@@ -51,7 +53,7 @@ macro_rules! impl_output_from {
     };
 }
 
-impl_output_from!{
+impl_output_from! {
     (U8,     u8),
     (U16,    u16),
     (U32,    u32),

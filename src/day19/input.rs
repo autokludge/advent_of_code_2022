@@ -5,3 +5,7 @@ const INPUT: &str = include_str!("../../input/19/input");
 pub fn read() -> Input {
     unimplemented!()
 }
+
+pub fn readex() -> Input {
+    unimplemented!()
+}

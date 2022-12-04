@@ -8,8 +8,11 @@ pub type Input = u8;
 
 pub fn run(part: Part) -> Output {
     let input = input::read();
+    let exampleinput = input::readex();
     match part {
+        Part::OneEx => part1::solve(&exampleinput),
         Part::One => part1::solve(&input),
+        Part::TwoEx => part2::solve(&exampleinput),
         Part::Two => part2::solve(&input),
     }
 }
