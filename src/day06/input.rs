@@ -1,11 +1,12 @@
 use crate::day06::Input;
 
 const INPUT: &str = include_str!("../../input/06/input");
+const EXAMPLE: &str = include_str!("../../input/06/example");
 
 pub fn read() -> Input {
-    unimplemented!()
+    INPUT.chars().collect::<Vec<char>>()
 }
 
 pub fn readex() -> Input {
-    unimplemented!()
+    EXAMPLE.chars().collect::<Vec<char>>()
 }
