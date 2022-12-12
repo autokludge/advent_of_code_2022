@@ -1,16 +1,14 @@
-pub mod grid;
 pub mod input;
 pub mod part1;
 pub mod part2;
 
-use std::fmt::Display;
+use std::{fmt::Display, ops::Sub};
 
 use itertools::Itertools;
+use std::ops::Add;
 use strum_macros::Display;
 
 use crate::{Output, Part};
-
-use self::grid::VecGrid;
 
 #[derive(Debug, Clone)]
 pub enum Direction {
@@ -40,65 +38,76 @@ impl RopeInstruction {
     }
 }
 
-pub struct RopeSimulation {
-    xmin: i32,
-    xmax: i32,
-    ymin: i32,
-    ymax: i32,
-    x_start: i32,
-    y_start: i32,
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct Point2d {
+    pub x: i32,
+    pub y: i32,
+}
 
-    //reverse order, ie pop() takes first instruction
+impl From<(i32, i32)> for Point2d {
+    fn from((x, y): (i32, i32)) -> Self {
+        Self { x, y }
+    }
+}
+impl From<Point2d> for (i32, i32) {
+    fn from(p: Point2d) -> Self {
+        (p.x, p.y)
+    }
+}
+
+impl From<Direction> for Point2d {
+    fn from(dir: Direction) -> Self {
+        match dir {
+            Direction::Up => (0, 1).into(),
+            Direction::Down => (0, -1).into(),
+            Direction::Left => (-1, 0).into(),
+            Direction::Right => (1, 0).into(),
+        }
+    }
+}
+
+impl Add for Point2d {
+    type Output = Point2d;
+
+    fn add(self, other: Point2d) -> Self::Output {
+        Self {
+            x: self.x + other.x,
+            y: self.y + other.y,
+        }
+    }
+}
+
+impl Sub for Point2d {
+    type Output = Point2d;
+
+    fn sub(self, other: Point2d) -> Self::Output {
+        Self {
+            x: self.x - other.x,
+            y: self.y - other.y,
+        }
+    }
+}
+
+pub struct RopeSimulation {
     instructions: Vec<RopeInstruction>,
-    //grid for display
-    display_grid: VecGrid<char>,
-    tail_visited_grid: VecGrid<char>,
+    knot_locations: Vec<Point2d>,
+    visited_locations: Vec<Point2d>,
 }
 
 impl Clone for RopeSimulation {
     fn clone(&self) -> Self {
         Self {
-            xmin: self.xmin.clone(),
-            xmax: self.xmax.clone(),
-            ymin: self.ymin.clone(),
-            ymax: self.ymax.clone(),
-            x_start: self.x_start.clone(),
-            y_start: self.y_start.clone(),
             instructions: self.instructions.clone(),
-            display_grid: self.display_grid.clone(),
-            tail_visited_grid: self.tail_visited_grid.clone(),
+            knot_locations: self.knot_locations.clone(),
+            visited_locations: self.visited_locations.clone(),
         }
     }
 }
 
 impl std::fmt::Display for RopeSimulation {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        writeln!(
-            f,
-            "cols:{}  rows:{}",
-            self.display_grid.cols, self.display_grid.rows
-        );
-        writeln!(
-            f,
-            "{:.>20},{}\n...{:.>10},{:.<10}...\n{},{:.<20}",
-            self.xmax, self.ymax, self.x_start, self.y_start, self.xmin, self.ymin,
-        );
-        writeln!(
-            f,
-            "{:.>20},{}\n...{:.>10},{:.<10}...\n{},{:.<20}",
-            self.display_grid.cols, 1, self.x_start, self.y_start, 1, self.display_grid.rows,
-        );
-        writeln!(f, "grid:          tail_visited:");
-
-        let dc = self.display_grid.grid.chunks(self.display_grid.cols);
-        let tc = self.tail_visited_grid.grid.chunks(self.display_grid.cols);
-
-        // for (disp_row, _tail_row) in dc.zip(tc) {
-        //     // writeln!(f, "{:?}\t{:?}", disp_row, tail_row);
-        //     //writeln!(f, "{:?}", disp_row.iter().join(""));
-        //     writeln!(f, "{:?}", disp_row);
-        // }
-        Ok(())
+        writeln!(f, "knot locations: {:?}", self.knot_locations);
+        writeln!(f, "visited locations: {:?}", self.visited_locations)
     }
 }
 
@@ -112,68 +121,31 @@ impl RopeSimulation {
         let mut w_max: i32 = 1;
         let mut w_min: i32 = 1;
 
-        for line in input.lines() {
-            //println!("grid {}x{}   {}", w_max, h_max, line);
+        for line in input.lines().rev() {
             let (dir, dist) = line.split_once(" ").unwrap();
 
             let distance: usize = dist.parse().unwrap();
             let direction = match dir {
-                "U" => {
-                    h += distance as i32;
-                    h_max = h_max.max(h);
-                    //println!("up {} pointer_x:{} height {}", distance, h, h_max);
-                    Direction::Up
-                }
-                "D" => {
-                    h -= distance as i32;
-                    h_min = h_min.min(h);
-                    Direction::Down
-                }
-                "L" => {
-                    w -= distance as i32;
-                    w_min = w_min.min(w);
-                    Direction::Left
-                }
-                "R" => {
-                    w += distance as i32;
-                    w_max = w_max.max(w);
-                    //println!("right {} pointer_x:{} width:{}", distance, w, w_max);
-                    Direction::Right
-                }
+                "U" => Direction::Up,
+                "D" => Direction::Down,
+                "L" => Direction::Left,
+                "R" => Direction::Right,
                 _ => panic!(),
             };
 
             let ri = RopeInstruction::new(direction, distance as u8);
             instructions.push(ri);
         }
-        let rows = (h_max + (1 - h_min)) as usize; //carefull, how do we know upper limit on width, height?
-        let cols = (w_max + (1 - w_min)) as usize;
 
-        // 1 = x_s + n
+        let origin_point: Point2d = (0, 0).into();
 
-        let start_x = 2 - w_min; //  1 -> 1   0 -> 2   -1 -> 3   -2 -> 4
-        let start_y = rows as i32 + (h_min - 1);
+        let knot_locations = vec![origin_point; 10];
+        let visited_locations = vec![origin_point];
 
-        // w_min = 1 -> start_y = rows          ==>> start_y = rows + (w_min(1) -1) ==>> rows + 0
-        // w_min = 0 -> start_y = rows - 1      ==>> start_y = rows + (w_min(0) -1) ==>> rows + (-1)
-        // w_min = -1 -> start_y = rows - 2     ==>> start_y = rows + (w_min(-1) -1) ==>> rows + (-2)
-
-        let default_grid: Vec<char> = vec!['.'; rows * cols];
-        let instructions = instructions.into_iter().rev().collect();
-
-        let mut grid = VecGrid::new(default_grid, cols, rows);
-        let idx = grid.coord_to_idx((start_x as usize, start_y as usize).into());
-        grid.grid[idx] = 'H';
         Self {
-            xmin: w_min,
-            xmax: w_max,
-            ymin: h_min,
-            ymax: h_max,
-            x_start: start_x,
-            y_start: start_y,
             instructions,
-            display_grid: grid.clone(),
-            tail_visited_grid: grid,
+            knot_locations,
+            visited_locations,
         }
     }
 }
@@ -192,7 +164,15 @@ pub fn run(part: Part) -> Output {
         }
         Part::TwoEx => {
             let exampleinput = input::readex();
-            part2::solve(&exampleinput)
+            let exampleinput2 = input::readex_two();
+
+            part2::solve(&exampleinput);
+
+            println!("* * * * * * * * * * * * * *");
+            println!(" * * * * * * * * * * * * * ");
+            println!("* * * * * * * * * * * * * *");
+
+            part2::solve(&exampleinput2)
         }
         Part::Two => {
             let input = input::read();
