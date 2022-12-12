@@ -4,11 +4,9 @@ const INPUT: &str = include_str!("../../input/10/input");
 const EXAMPLE: &str = include_str!("../../input/10/example");
 
 pub fn read() -> Input {
-    INPUT.chars().collect::<Vec<char>>();
-    unimplemented!()
+    INPUT.lines().map(|s| s.to_owned()).collect()
 }
 
 pub fn readex() -> Input {
-    EXAMPLE.chars().collect::<Vec<char>>();
-    unimplemented!()
+    EXAMPLE.lines().map(|s| s.to_owned()).collect()
 }
