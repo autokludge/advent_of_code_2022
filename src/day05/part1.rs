@@ -9,8 +9,10 @@ pub fn solve(input: &mut Input) -> Output {
             instruction.target,
         );
         for i in (0..m) {
-            let temp = crate_stacks[s as usize].pop().unwrap();
-            &crate_stacks[t as usize].push(temp);
+            // let temp = crate_stacks[s as usize].pop().unwrap();
+            if let Some(temp) = crate_stacks[s as usize].pop() {
+                &crate_stacks[t as usize].push(temp);
+            }
         }
     }
     //collect tops of stacks to string

@@ -84,7 +84,7 @@ where
     // }
 
     pub fn collect_decendants(&self, idx: usize) -> Vec<usize> {
-        println!("entering collect_decendants {}", idx);
+        //println!("entering collect_decendants {}", idx);
 
         self.arena
             .iter()

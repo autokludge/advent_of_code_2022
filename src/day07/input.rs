@@ -7,11 +7,11 @@ use super::{arenatree::ArenaTree, ElfFile};
 const INPUT: &str = include_str!("../../input/07/input");
 const EXAMPLE: &str = include_str!("../../input/07/example");
 
-pub(super) fn read() -> Input {
+pub fn read() -> Input {
     create_elf_directory_from_input(INPUT)
 }
 
-pub(super) fn readex() -> Input {
+pub fn readex() -> Input {
     create_elf_directory_from_input(EXAMPLE)
 }
 

@@ -70,13 +70,19 @@ criterion_group!(day04, benchmark_day04_part01, benchmark_day04_part02);
 //-------------------------------------------------------------------------------------
 
 pub fn benchmark_day05_part01(c: &mut Criterion) {
+    // need to re-init between passes
     let input = black_box(day05::input::read());
-    c.bench_function("Day 05, Part 1", |b| b.iter(|| day05::part1::solve(&input)));
+    c.bench_function("Day 05, Part 1", |b| {
+        b.iter(|| day05::part1::solve(&mut input.clone()))
+    });
 }
 
 pub fn benchmark_day05_part02(c: &mut Criterion) {
+    // need to re-init between passes
     let input = black_box(day05::input::read());
-    c.bench_function("Day 05, Part 2", |b| b.iter(|| day05::part2::solve(&input)));
+    c.bench_function("Day 05, Part 2", |b| {
+        b.iter(|| day05::part2::solve(&mut input.clone()))
+    });
 }
 
 criterion_group!(day05, benchmark_day05_part01, benchmark_day05_part02);
@@ -167,12 +173,16 @@ criterion_group!(day10, benchmark_day10_part01, benchmark_day10_part02);
 
 pub fn benchmark_day11_part01(c: &mut Criterion) {
     let input = black_box(day11::input::read());
-    c.bench_function("Day 11, Part 1", |b| b.iter(|| day11::part1::solve(&input)));
+    c.bench_function("Day 11, Part 1", |b| {
+        b.iter(|| day11::part1::solve(&mut input.clone()))
+    });
 }
 
 pub fn benchmark_day11_part02(c: &mut Criterion) {
     let input = black_box(day11::input::read());
-    c.bench_function("Day 11, Part 2", |b| b.iter(|| day11::part2::solve(&input)));
+    c.bench_function("Day 11, Part 2", |b| {
+        b.iter(|| day11::part2::solve(&mut input.clone()))
+    });
 }
 
 criterion_group!(day11, benchmark_day11_part01, benchmark_day11_part02);

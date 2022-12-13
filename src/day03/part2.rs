@@ -16,7 +16,6 @@ pub fn solve(input: &Input) -> Output {
         for c in group[0].chars() {
             if group[1].contains(c) && group[2].contains(c) {
                 let v = item_value(c);
-                println!("found badge {}=>{}", c, v);
                 sum_badge_priorities += v;
                 break;
             }

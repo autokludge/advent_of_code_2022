@@ -52,8 +52,8 @@ fn parse_input_to_warehouse(input: &str) -> WarehouseCrane {
         let cap = re.captures(line).unwrap();
         if cap.len() != 4 {
             //3 capture groups + 1 linematch group
-            println!("{}, {:?}", cap.len(), cap);
-            panic!();
+            // println!("{}, {:?}", cap.len(), cap);
+            panic!("");
         }
         //println!("{}, {:?}", cap.len(), cap);
         let (crates_to_move, source, target) = (

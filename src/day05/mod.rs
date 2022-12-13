@@ -6,7 +6,7 @@ use std::collections::HashMap;
 
 use crate::{Output, Part};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct CargoInstruction {
     source: u8,
     target: u8,
@@ -23,7 +23,7 @@ impl CargoInstruction {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct WarehouseCrane {
     stacks: Vec<Vec<char>>,
     instructions: Vec<CargoInstruction>,
@@ -47,7 +47,7 @@ pub fn run(part: Part) -> Output {
         Part::OneEx => part1::solve(&mut exampleinput),
         Part::One => part1::solve(&mut input),
         Part::TwoEx => part2::solve(&mut exampleinput),
-        Part::Two => part2::solve(&mut  input),
+        Part::Two => part2::solve(&mut input),
     }
 }
 
