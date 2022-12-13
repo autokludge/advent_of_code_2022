@@ -4,16 +4,26 @@ pub mod part2;
 
 use crate::{Output, Part};
 
-pub type Input = u8;
+pub type Input = Vec<input::MonkeyItems>;
 
 pub fn run(part: Part) -> Output {
-    let input = input::read();
-    let exampleinput = input::readex();
     match part {
-        Part::OneEx => part1::solve(&exampleinput),
-        Part::One => part1::solve(&input),
-        Part::TwoEx => part2::solve(&exampleinput),
-        Part::Two => part2::solve(&input),
+        Part::OneEx => {
+            let mut exampleinput = input::readex();
+            part1::solve(&mut exampleinput)
+        }
+        Part::One => {
+            let mut input = input::read();
+            part1::solve(&mut input)
+        }
+        Part::TwoEx => {
+            let mut exampleinput = input::readex();
+            part2::solve(&mut exampleinput)
+        }
+        Part::Two => {
+            let mut input = input::read();
+            part2::solve(&mut input)
+        }
     }
 }
 
