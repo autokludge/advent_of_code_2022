@@ -4,7 +4,9 @@ pub mod part2;
 
 use crate::{Output, Part};
 
-pub type Input = u8;
+use self::input::HeightMap;
+
+pub type Input = HeightMap;
 
 pub fn run(part: Part) -> Output {
     let exampleinput = input::readex();
